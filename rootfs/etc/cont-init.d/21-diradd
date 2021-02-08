@@ -1,0 +1,81 @@
+#!/bin/zsh
+
+if ! [[ -d /config ]]
+then
+    mkdir /config
+    echo -e "[init-dir]\tAdded /config dir."
+
+fi
+
+if ! [[ -d /git ]]
+then
+    mkdir /git
+    echo -e "[init-dir]\tAdded /git dir."
+
+fi
+
+if ! [[ -d /config/.ssh ]]
+then
+    mkdir /config/.ssh
+    echo -e "[init-dir]\tAdded /config/.ssh dir."
+fi
+
+
+if ! [[ -d /config/git ]]
+then
+    mkdir /config/git
+    echo -e "[init-dir]\tAdded /config/git dir."
+fi
+
+if ! [[ -d /config/git/repos ]]
+then
+    mkdir /config/git/repos
+    ln -s -f /config/git/repos /git
+    echo -e "[init-dir]\tAdded /config/git/repos dir."
+
+fi
+
+if ! [[ -d /data ]]
+then
+    mkdir /data
+    echo -e "[init-dir]\tAdded /data dir."
+
+fi
+
+if ! [[ -d /etc/ssh ]]
+then
+    mkdir /etc/ssh
+    echo -e "[init-dir]\tAdded /etc/ssh dir."
+
+fi
+
+if ! [[ -z `find /data -maxdepth 1 -type f` ]]
+then
+
+    keys=( `find /data -maxdepth 1 -type f` )
+    
+    for (( i = 1 ; i <= ${#keys[@]} ; i++ ))
+    do
+        cp ${keys[${i}]} /config/.ssh
+        echo -e "[init-dir]\tAdded ${keys[${i}]} to /config/.ssh/."
+
+        if  [[ ${keys[${i}]} =~ ".pub$" ]]
+        then
+            cat ${keys[${i}]} >> /config/.ssh/authorized_keys
+            echo -e "[init-dir]\tAdded ${keys[${i}]} to /config/.ssh/authorized_keys."
+        fi
+
+    done
+    echo -e "[init-dir]\tAdded keys to /config/.ssh/"
+
+fi
+
+chmod 600 /config/.ssh/* 
+chmod 600 /etc/ssh/*
+chown -R git:users /config 
+chmod go-w /config 
+chown -R git:users /git
+chmod go-w /git
+chmod 700 /config/.ssh 
+
+echo -e "[init-dir]\tSet permissions to git:users"

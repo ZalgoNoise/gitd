@@ -1,0 +1,11 @@
+#!/usr/bin/with-contenv zsh
+
+echo -e "[init-users]\tPUID -> ${PUID}"
+echo -e "[init-users]\tPGID -> ${PGID}"
+
+
+groupadd git
+usermod -u ${PUID:-1001} -d /config -m -g users -l git app
+echo -e "[init-users]\tAdded git user."
+
+passwd -d git

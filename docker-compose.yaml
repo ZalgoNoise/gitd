@@ -1,0 +1,15 @@
+version: "3.7"
+
+services:
+  gitd:
+    build: .
+    container_name: "gitd"
+    environment:
+      - PUID=${UID}
+      - PGID=${GID}
+    ports:
+      - "2222:22"
+    restart: unless-stopped
+    volumes:
+      - ./keys:/data
+      - "${DEVPATH}/git:/git"

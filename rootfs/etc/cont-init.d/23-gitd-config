@@ -1,0 +1,13 @@
+#!/bin/zsh
+
+if ! [[ -d /var/log/gitd ]]
+then
+    mkdir -p /var/log/gitd
+fi
+
+touch /var/log/gitd/gitd.log
+touch /var/log/gitd/sshd.log
+chown -R git:users /var/log/gitd
+ln -s -f /var/log/gitd/gitd.log /config/gitd.log
+
+echo -e "[init-gitd]\tSet gitd logging to /var/log/gitd/gitd.log and linked to /config/gitd.log"

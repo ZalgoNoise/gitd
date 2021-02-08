@@ -1,0 +1,39 @@
+#!/bin/zsh
+
+function gitdLog() {
+    su git -c "\
+        echo -e \"[gitd]\t${1}\" | tee -a /var/log/gitd/gitd.log"
+}
+
+
+echo -en "Enter a name for this config (default: git):\n~> " 
+read -r host
+
+echo -en "Enter the hostname you are connecting to  (default: localhost):\n~> " 
+read -r hostname
+
+echo -en "Enter the SSH port you are connecting to  (default: 2222):\n~> " 
+read -r port
+
+echo -en "Enter the SSH key you are using (default: ~/.ssh/id_rsa):\n~> " 
+read -r sshKey
+
+
+cat << EOF
+
+
+### gitd server
+# Connect with \`ssh git\`
+# Or with \`git clone git:/path/to/repo.git\`
+#
+
+Host ${host:-git}
+    User git
+    Hostname ${hostname:-localhost}
+    Port ${port:-2222}
+    IdentityFile ${sshKey:-~/.ssh/id_rsa}
+
+EOF
+
+gitdLog "Generated SSH config successfully"
+exit 0
